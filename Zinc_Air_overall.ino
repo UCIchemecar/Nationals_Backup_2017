@@ -118,9 +118,6 @@ Serial.begin(115200);
   
   /* Configure the sensor */
   configureSensor();
-    
-  // Now we're ready to get readings ... move on to loop()!
-
   Serial.println("Dual MC33926 Motor Shield");
   PololuWheelEncoders::init(3,5,6,11);
   pinMode(8,OUTPUT);
@@ -128,8 +125,7 @@ Serial.begin(115200);
 
 
 void loop() {
-  // put your main code here, to run repeatedly:
-uint32_t lum = tsl.getFullLuminosity();
+  uint32_t lum = tsl.getFullLuminosity();
   uint16_t ir, full;
   static unsigned long t0=0; //the time that liquid was stabilized
   static unsigned long t1=0; //the time that the liquid went dark
