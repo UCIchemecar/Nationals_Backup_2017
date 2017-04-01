@@ -25,8 +25,8 @@ void configureSensor(void)
   // You can change the gain on the fly, to adapt to brighter/dimmer light situations
   //tsl.setGain(TSL2591_GAIN_LOW);    // 1x gain (bright light)
   //tsl.setGain(TSL2591_GAIN_MED);      // 25x gain
-  tsl.setGain(TSL2591_GAIN_HIGH);   // 428x gain
-  //tsl.setGain(TSL2591_GAIN_MAX);
+  //tsl.setGain(TSL2591_GAIN_HIGH);   // 428x gain
+  tsl.setGain(TSL2591_GAIN_MAX);
   // Changing the integration time gives you a longer time over which to sense light
   // longer timelines are slower, but are good in very low light situtations!
   tsl.setTiming(TSL2591_INTEGRATIONTIME_100MS);  // shortest integration time (bright light)
@@ -125,36 +125,81 @@ Serial.begin(115200);
 
 
 void loop() {
+  static float total2;
+  static float total1;
+  static int flag1=0;
+  static int flag2=0;
+  static int flag3=0;
+  static int flag4=0;
+  static int flag5=0;
+  static int speed1;
+  static int speed2;
+  static int co;
+  static signed int adjust=1;//adjustment to the speed everytime the loop is run
+  static int counter=0;//count the total times the loop has been run
+  static int lux;
+  static int preLux=0;
+  static long int count=0;
+  static long timer1=0;//Count until max is reached
+  static long timer2=0;//Count until lux 30 is reached
+  static long currentT;
+  static float tagertRotate=1000;
+    static int mode=0;
+    static int t1=millis(); //t1 is the time it starts
+  int j=PololuWheelEncoders::getCountsAndResetM2();
+  int i=PololuWheelEncoders::getCountsAndResetM1();
+  total2=total2+abs(j/3591.84);
+  total1=total1+abs(i/3591.84);
+  Serial.print(total1); Serial.print("    ");
+  Serial.println(total2);
+
+  /***************************sensor******************/
   uint32_t lum = tsl.getFullLuminosity();
   uint16_t ir, full;
-  static unsigned long t0=0; //the time that liquid was stabilized
-  static unsigned long t1=0; //the time that the liquid went dark
-  static unsigned long time1=0; //time it takes for the liquid to go from injected to dark
-  static int f1=0; // flag to indicate phase, phase 0 is the default where nothing has happened. 
   ir = lum >> 16;
   full = lum & 0xFFFF;
-  unsigned int a=tsl.calculateLux(full, ir);
-  Serial.print(millis()); Serial.print("          "); Serial.print(a); Serial.print("             "); Serial.print(t0);  Serial.print("                                 "); Serial.print(t1); Serial.print("                              "); Serial.println(time1);
-  if(a<40000 && millis()>=200 && f1==0)
+  //Serial.print("Visible: "); Serial.print(full - ir); Serial.print("  ");
+  lux=tsl.calculateLux(full, ir);
+  Serial.print("Lux: "); Serial.println(tsl.calculateLux(full, ir));
+  Serial.print("m: "); Serial.print(tagertRotate*3.14159265359*.09004); Serial.print(" / "); Serial.println(tagertRotate*3.14159265359*.09004*1.01);
+  Serial.print("preLux: "); Serial.println(preLux);
+  Serial.print("timer1: "); Serial.println(timer1);
+  Serial.print("timer2: "); Serial.println(timer2);
+  Serial.print("flag1: "); Serial.println(flag1);
+    Serial.print("co: "); Serial.println(co);
+    Serial.print("millis: "); Serial.println(millis());
+  //Serial.print("total1: "); Serial.println(total1);
+  
+     /*******Clockreset********/
+  if (preLux>(lux+5))//this is used to determine max lux
   {
-    f1=1;//liquid has been injected. 
+    co = co+1;
   }
-  if(f1==1 && a>40000)
-  {
-    f1=2;//liquid has been stabilized 
-    t0=millis();
-  }
-  if(f1==2 && a<40000)
-  {
-    //liquid has turned dark
-    t1=millis();
-    time1=t1-t0;  
-    if (time1>10000)
-    {
-      f1=3;
+  else {
+    co=0;
     }
+  if ( preLux>lux && co>30 && (preLux-lux)>20 && flag1==0)
+  {
+    flag1=1;  
   }
-  if (f1==3)
+  if ( preLux<lux && flag1 == 0)
+  {
+    preLux=lux; 
+    timer1=millis(); 
+  }
+
+  if(flag1==1 && lux<30 &&flag3==0 && millis()>5000)//change the lux parameter
+ {
+  timer2=millis()-timer1;
+  flag3=1;
+ //tagertRotate=((testtime-998)/1464.8)/(0.09004*3.14159265359*1.01);//this equation will convert the time to the amount of rotation the car will go
+                  //0.09 is the dimameter of the wheel
+                  //3.14159265359*1.02 basically pi
+                  //18874 is a made up coefficient 
+  tagertRotate=((timer2+4130.841176)/1447.25941)/(0.09004*3.14159265359*1.01);//this is the formula used to determine the number of rotations
+ //unit of rotation                  
+ } 
+  if ((total1+total2)/2>targetRotate)
   {
     digitalWrite(8,LOW);
   }
@@ -162,4 +207,5 @@ void loop() {
   {
     digitalWrite(8,HIGH);
   }
+  
 }
