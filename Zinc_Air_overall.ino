@@ -118,7 +118,6 @@ Serial.begin(115200);
   
   /* Configure the sensor */
   configureSensor();
-  Serial.println("Dual MC33926 Motor Shield");
   PololuWheelEncoders::init(3,5,6,11);
   pinMode(8,OUTPUT);
 }
@@ -199,7 +198,7 @@ void loop() {
   tagertRotate=((timer2+4130.841176)/1447.25941)/(0.09004*3.14159265359*1.01);//this is the formula used to determine the number of rotations
  //unit of rotation                  
  } 
-  if ((total1+total2)/2>targetRotate)
+  if ((total1+total2)/2>tagertRotate)
   {
     digitalWrite(8,LOW);
   }
