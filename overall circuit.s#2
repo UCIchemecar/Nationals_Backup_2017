@@ -2270,6 +2270,7 @@ SparkFun BigTime Watch Kit&lt;/a&gt;&lt;/li&gt;&lt;/ul&gt;
 <sheets>
 <sheet>
 <plain>
+<text x="35.56" y="35.56" size="1.778" layer="91">Check direction of the motor before wiring</text>
 </plain>
 <instances>
 <instance part="BT1" gate="G$1" x="7.62" y="-10.16" rot="R90"/>
