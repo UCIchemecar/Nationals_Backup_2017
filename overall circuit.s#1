@@ -2266,6 +2266,7 @@ SparkFun BigTime Watch Kit&lt;/a&gt;&lt;/li&gt;&lt;/ul&gt;
 <part name="D1" library="adafruit" deviceset="DIODE" device="DO-1N4148"/>
 <part name="M2" library="SparkFun-Electromechanical" deviceset="MOTOR" device="10MM"/>
 <part name="S1" library="SparkFun-Switches" deviceset="MOMENTARY-SWITCH-SPST" device="-SMD-5.2MM"/>
+<part name="D2" library="adafruit" deviceset="DIODE" device="DO-1N4148"/>
 </parts>
 <sheets>
 <sheet>
@@ -2284,10 +2285,13 @@ SparkFun BigTime Watch Kit&lt;/a&gt;&lt;/li&gt;&lt;/ul&gt;
 <instance part="K1" gate="K$1" x="60.96" y="10.16" rot="R180"/>
 <instance part="U1" gate="G$1" x="114.3" y="17.78" rot="R90"/>
 <instance part="D1" gate="G$1" x="71.12" y="10.16" rot="R90"/>
-<instance part="M2" gate="G$1" x="33.02" y="35.56" rot="R180"/>
+<instance part="M2" gate="G$1" x="33.02" y="35.56" smashed="yes" rot="R180">
+<attribute name="NAME" x="38.1" y="40.64" size="1.778" layer="95" font="vector" rot="R180"/>
+</instance>
 <instance part="S1" gate="G$1" x="33.02" y="50.8" smashed="yes" rot="R270">
 <attribute name="NAME" x="34.544" y="50.8" size="1.778" layer="95" font="vector" rot="R270" align="bottom-center"/>
 </instance>
+<instance part="D2" gate="G$1" x="25.4" y="35.56" rot="R270"/>
 </instances>
 <busses>
 </busses>
@@ -2378,14 +2382,24 @@ SparkFun BigTime Watch Kit&lt;/a&gt;&lt;/li&gt;&lt;/ul&gt;
 <pinref part="K1" gate="K$1" pin="NO"/>
 <wire x1="33.02" y1="15.24" x2="53.34" y2="15.24" width="0.1524" layer="91"/>
 <pinref part="M2" gate="G$1" pin="+"/>
-<wire x1="33.02" y1="30.48" x2="33.02" y2="15.24" width="0.1524" layer="91"/>
+<wire x1="33.02" y1="30.48" x2="33.02" y2="27.94" width="0.1524" layer="91"/>
+<pinref part="D2" gate="G$1" pin="C"/>
+<wire x1="33.02" y1="27.94" x2="33.02" y2="15.24" width="0.1524" layer="91"/>
+<wire x1="25.4" y1="33.02" x2="25.4" y2="27.94" width="0.1524" layer="91"/>
+<wire x1="25.4" y1="27.94" x2="33.02" y2="27.94" width="0.1524" layer="91"/>
+<junction x="33.02" y="27.94"/>
 </segment>
 </net>
 <net name="N$13" class="0">
 <segment>
 <pinref part="S1" gate="G$1" pin="2"/>
 <pinref part="M2" gate="G$1" pin="-"/>
-<wire x1="33.02" y1="45.72" x2="33.02" y2="40.64" width="0.1524" layer="91"/>
+<wire x1="33.02" y1="45.72" x2="33.02" y2="43.18" width="0.1524" layer="91"/>
+<pinref part="D2" gate="G$1" pin="A"/>
+<wire x1="33.02" y1="43.18" x2="33.02" y2="40.64" width="0.1524" layer="91"/>
+<wire x1="33.02" y1="43.18" x2="25.4" y2="43.18" width="0.1524" layer="91"/>
+<wire x1="25.4" y1="43.18" x2="25.4" y2="38.1" width="0.1524" layer="91"/>
+<junction x="33.02" y="43.18"/>
 </segment>
 </net>
 </nets>
