@@ -145,12 +145,9 @@ void loop() {
   static float tagertRotate=1000;
     static int mode=0;
     static int t1=millis(); //t1 is the time it starts
-  int j=PololuWheelEncoders::getCountsAndResetM2();
   int i=PololuWheelEncoders::getCountsAndResetM1();
-  total2=total2+abs(j/3591.84);
   total1=total1+abs(i/3591.84);
   Serial.print(total1); Serial.print("    ");
-  Serial.println(total2);
 
   /***************************sensor******************/
   uint32_t lum = tsl.getFullLuminosity();
@@ -198,7 +195,7 @@ void loop() {
   tagertRotate=((timer2+4130.841176)/1447.25941)/(0.09004*3.14159265359*1.01);//this is the formula used to determine the number of rotations
  //unit of rotation                  
  } 
-  if ((total1+total2)/2>tagertRotate)
+  if (total1>tagertRotate)
   {
     digitalWrite(8,LOW);
   }
