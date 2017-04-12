@@ -142,12 +142,17 @@ void loop() {
   static long timer1=0;//Count until max is reached
   static long timer2=0;//Count until lux 30 is reached
   static long currentT;
+  static float totalI=0; //total counts
   static float tagertRotate=1000;
-    static int mode=0;
-    static int t1=millis(); //t1 is the time it starts
-  int i=PololuWheelEncoders::getCountsAndResetM1();
-  total1=total1+abs(i/3591.84);
-  Serial.print(total1); Serial.print("    ");
+  static int mode=0;
+  static int t1=millis(); //t1 is the time it starts
+  float i=PololuWheelEncoders::getCountsAndResetM1();
+  totalI=totalI+i;
+  total1=total1+abs(i/6500.0);// used for 1000:1 micro metal gear motor
+  Serial.print(totalI); 
+  Serial.print("    ");
+  Serial.print(total1); 
+  Serial.print("    ");
 
   /***************************sensor******************/
   uint32_t lum = tsl.getFullLuminosity();
@@ -167,11 +172,12 @@ void loop() {
   //Serial.print("total1: "); Serial.println(total1);
   
      /*******Clockreset********/
-  if (preLux>(lux+5))//this is used to determine max lux
+  if (preLux>(lux+5)) //this is used to determine max lux
   {
     co = co+1;
   }
-  else {
+  else 
+  {
     co=0;
     }
   if ( preLux>lux && co>30 && (preLux-lux)>20 && flag1==0)
