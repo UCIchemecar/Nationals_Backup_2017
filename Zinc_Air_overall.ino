@@ -134,12 +134,10 @@ void loop() {
   static int speed1;
   static int speed2;
   static int co;
-  static int restTime=6000;
   static signed int adjust=1;//adjustment to the speed everytime the loop is run
   static int counter=0;//count the total times the loop has been run
   static int lux;
   static int preLux=0;
-  static int Tcycle=0;
   static long int count=0;
   static long timer1=0;//Count until max is reached
   static long timer2=0;//Count until lux 30 is reached
@@ -207,16 +205,7 @@ void loop() {
   }
   else
   {
-    if(millis()-Tcycle>restTime)
-    {
-      Tcycle=millis();
-      digitalWrite(8,LOW);
-      delay(3000);
-    }
-    else
-    {
     digitalWrite(8,HIGH);
-    }
   }
   
 }
