@@ -211,6 +211,7 @@ void loop() {
     {
       Tcycle=millis();
       digitalWrite(8,LOW);
+      delay(3000);
     }
     else
     {
