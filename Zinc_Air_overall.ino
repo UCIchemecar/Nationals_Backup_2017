@@ -124,8 +124,8 @@ Serial.begin(115200);
 
 
 void loop() {
-  static float total2;
-  static float total1;
+  //static float total2;
+  static float total1=0;
   static int flag1=0;
   static int flag2=0;
   static int flag3=0;
