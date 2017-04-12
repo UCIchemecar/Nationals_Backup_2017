@@ -134,7 +134,7 @@ void loop() {
   static int speed1;
   static int speed2;
   static int co;
-  static int restTime=4000;
+  static int restTime=6000;
   static signed int adjust=1;//adjustment to the speed everytime the loop is run
   static int counter=0;//count the total times the loop has been run
   static int lux;
