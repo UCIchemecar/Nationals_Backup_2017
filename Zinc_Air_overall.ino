@@ -1,3 +1,5 @@
+
+
 #include <PololuWheelEncoders.h>
 #include <Adafruit_Sensor.h>
 #include "Adafruit_TSL2591.h"
@@ -131,6 +133,7 @@ void loop() {
   static int flag3=0;
   static int flag4=0;
   static int flag5=0;
+  static float RunTime=0;
   static int speed1;
   static int speed2;
   static int co;
@@ -148,6 +151,7 @@ void loop() {
   static int t1=millis(); //t1 is the time it starts
   float i=PololuWheelEncoders::getCountsAndResetM1();
   totalI=totalI+i;
+  Serial.print(totalI); Serial.print("    ");
   total1=total1+abs(i/6500.0);// used for 1000:1 micro metal gear motor
   Serial.print(total1); 
   Serial.print("    ");
@@ -160,7 +164,8 @@ void loop() {
   //Serial.print("Visible: "); Serial.print(full - ir); Serial.print("  ");
   lux=tsl.calculateLux(full, ir);
   Serial.print("Lux: "); Serial.println(tsl.calculateLux(full, ir));
-  Serial.print("m: "); Serial.print(tagertRotate*3.14159265359*.09004); Serial.print(" / "); Serial.println(tagertRotate*3.14159265359*.09004*1.01);
+  Serial.print("m: ");  Serial.println(RunTime);
+  
   Serial.print("preLux: "); Serial.println(preLux);
   Serial.print("timer1: "); Serial.println(timer1);
   Serial.print("timer2: "); Serial.println(timer2);
@@ -197,9 +202,10 @@ void loop() {
                   //3.14159265359*1.02 basically pi
                   //18874 is a made up coefficient 
   tagertRotate=((timer2+4130.841176)/1447.25941)/(0.09004*3.14159265359*1.01);//this is the formula used to determine the number of rotations
+  RunTime=1000*tagertRotate*0.09004*3.14159265359*1.01/0.13;
  //unit of rotation                  
  } 
-  if (total1>tagertRotate)
+  if (flag1==1 && (millis()-3000)>RunTime)
   {
     digitalWrite(8,LOW);
   }
