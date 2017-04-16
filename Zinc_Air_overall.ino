@@ -79,7 +79,7 @@ void advancedRead(void)
   ir = lum >> 16;
   full = lum & 0xFFFF;
   unsigned int a=tsl.calculateLux(full, ir);
-  Serial.print(millis()); Serial.print("          "); Serial.print(a); Serial.print("             "); Serial.print(t0);  Serial.print("                                 "); Serial.print(t1); Serial.print("                              "); Serial.println(time1);
+  Serial.print(millis()); Serial.print("          "); Serial.print(a); Serial.print("             "); Serial.print(t0);  Serial.print("                                 "); Serial.print(t1); Serial.print("                              "); Serial.println(time1); 
   if(a<40000 && millis()>=200 && f1==0)
   {
     f1=1;//liquid has been injected. 
@@ -164,7 +164,7 @@ void loop() {
   //Serial.print("Visible: "); Serial.print(full - ir); Serial.print("  ");
   lux=tsl.calculateLux(full, ir);
   Serial.print("Lux: "); Serial.println(tsl.calculateLux(full, ir));
-  Serial.print("m: ");  Serial.println(RunTime);
+  Serial.print("m: "); Serial.print(tagertRotate*3.14159265359*.09004); Serial.print(" / "); Serial.print(tagertRotate*3.14159265359*.09004*1.01);  Serial.print("    ");Serial.println(RunTime);
   
   Serial.print("preLux: "); Serial.println(preLux);
   Serial.print("timer1: "); Serial.println(timer1);
@@ -202,10 +202,10 @@ void loop() {
                   //3.14159265359*1.02 basically pi
                   //18874 is a made up coefficient 
   tagertRotate=((timer2+4130.841176)/1447.25941)/(0.09004*3.14159265359*1.01);//this is the formula used to determine the number of rotations
-  RunTime=1000*tagertRotate*0.09004*3.14159265359*1.01/0.13;
+  RunTime=1000*tagertRotate*0.09004*3.14159265359*1.01/0.16;
  //unit of rotation                  
  } 
-  if (flag1==1 && (millis()-3000)>RunTime)
+  if (flag3==1 && (millis()-5000)>RunTime)
   {
     digitalWrite(8,LOW);
   }
