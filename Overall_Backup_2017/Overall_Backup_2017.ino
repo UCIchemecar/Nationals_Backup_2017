@@ -128,14 +128,10 @@ Serial.begin(115200);
 
 
 void loop() {
-  //static float total2;
-  static float total1=0;
   static int flag1=0;
   static int flag3=0;
   static boolean car_moved =false;
   static float RunTime=0;
-  static int speed1;
-  static int speed2;
   static int co;
   long int car_start_time;
   static signed int adjust=1;//adjustment to the speed everytime the loop is run
@@ -158,8 +154,8 @@ void loop() {
   full = lum & 0xFFFF;
   //Serial.print("Visible: "); Serial.print(full - ir); Serial.print("  ");
   lux=tsl.calculateLux(full, ir);
-  Serial.print("Lux: "); Serial.println(tsl.calculateLux(full, ir));
-  Serial.print("m: "); Serial.print(tagertRotate*3.14159265359*.09004); Serial.print(" / "); Serial.print(tagertRotate*3.14159265359*.09004*1.01);  Serial.print("    ");Serial.println(RunTime);
+  Serial.print("Lux: "); Serial.println(lux);
+  Serial.print("m: "); Serial.println(tagertRotate*0.09004*3.14159265359*1.01); 
 
   Serial.print("preLux: "); Serial.println(preLux);
   Serial.print("timer1: "); Serial.println(timer1);
@@ -167,7 +163,7 @@ void loop() {
   Serial.print("flag1: "); Serial.println(flag1);
     Serial.print("co: "); Serial.println(co);
     Serial.print("millis: "); Serial.println(millis());
-  //Serial.print("total1: "); Serial.println(total1);
+  
 
      /*******Clockreset********/
   if (preLux>(lux+5)) //this is used to determine max lux
@@ -196,7 +192,7 @@ void loop() {
                   //0.09 is the dimameter of the wheel
                   //3.14159265359*1.02 basically pi
                   //18874 is a made up coefficient 
-  tagertRotate=((timer2+4130.841176)/1447.25941)/(0.09004*3.14159265359*1.01);//this is the formula used to determine the number of rotations
+  tagertRotate=((timer2+4130.841176)/1447.25941);//this is the formula used to determine the number of rotations
   RunTime=1000*tagertRotate*0.09004*3.14159265359*1.01/car_speed;
  //unit of rotation
  }
@@ -214,7 +210,7 @@ void loop() {
 
  }
 
-  if (flag3==1 && (millis()-car_start_time)>RunTime && car_moved)
+  if (flag3==1 && (millis()-car_start_time)>=RunTime && car_moved)
   {
     md.setM1Speed(0);
     md.setM2Speed(0);
