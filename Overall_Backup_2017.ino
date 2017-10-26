@@ -2,9 +2,17 @@
 
 #include <Adafruit_Sensor.h>
 #include "Adafruit_TSL2591.h"
-
 #include <Wire.h>
+#include "DualMC33926MotorShield.h"
+
 Adafruit_TSL2591 tsl = Adafruit_TSL2591(2591);
+DualMC33926MotorShield md;
+
+#define Motor_Tick_per_rotation 3591.84
+#define motor1_speed 319//adjust for speed of motor 1, out of 400
+#define motor2_speed 307//adjust for speed of motor 2, out of 400
+#define car_speed 0.39//speed of the car in m/s
+
 void displaySensorDetails(void)
 {
   sensor_t sensor;
@@ -119,7 +127,6 @@ Serial.begin(115200);
   
   /* Configure the sensor */
   configureSensor();
-  PololuWheelEncoders::init(3,5,6,11);
   pinMode(8,OUTPUT);
 }
 
@@ -132,10 +139,12 @@ void loop() {
   static int flag3=0;
   static int flag4=0;
   static int flag5=0;
+  static boolean car_moved =false;
   static float RunTime=0;
   static int speed1;
   static int speed2;
   static int co;
+  long int car_start_time;
   static signed int adjust=1;//adjustment to the speed everytime the loop is run
   static int counter=0;//count the total times the loop has been run
   static int lux;
@@ -204,13 +213,31 @@ void loop() {
   RunTime=1000*tagertRotate*0.09004*3.14159265359*1.01/0.16;
  //unit of rotation                  
  } 
-  if (flag3==1 && (millis()-5000)>RunTime)
+
+ if(analogRead(A3) < 500 && car_moved==false)
+ {
+         Serial.println("It has not run");
+ }
+
+ if(analogRead(A3) > 500 && !car_moved)
+ {
+         car_moved=!car_moved;
+         car_start_time=millis();
+         md.setM1Speed(motor1_speed);
+         md.setM2Speed(motor2_speed);
+         Serial.println("It started running");
+
+ }
+
+  if (flag3==1 && (millis()-car_start_time)>RunTime && car_moved)
   {
-    digitalWrite(8,LOW);
+    md.setM1Speed(0);
+    md.setM2Speed(0);
   }
   else
   {
-    digitalWrite(8,HIGH);
+    md.setM1Speed(motor1_speed);
+    md.setM2Speed(motor2_speed);
   }
   
 }
