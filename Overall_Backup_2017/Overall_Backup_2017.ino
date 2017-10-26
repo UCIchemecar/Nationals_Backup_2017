@@ -132,10 +132,7 @@ void loop() {
   //static float total2;
   static float total1=0;
   static int flag1=0;
-  static int flag2=0;
   static int flag3=0;
-  static int flag4=0;
-  static int flag5=0;
   static boolean car_moved =false;
   static float RunTime=0;
   static int speed1;
