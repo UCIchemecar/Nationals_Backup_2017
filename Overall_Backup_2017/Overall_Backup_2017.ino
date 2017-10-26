@@ -161,8 +161,8 @@ void loop() {
   Serial.print("timer1: "); Serial.println(timer1);
   Serial.print("timer2: "); Serial.println(timer2);
   Serial.print("flag1: "); Serial.println(flag1);
-    Serial.print("co: "); Serial.println(co);
-    Serial.print("millis: "); Serial.println(millis());
+  Serial.print("co: "); Serial.println(co);
+  Serial.print("millis: "); Serial.println(millis());
   
 
      /*******Clockreset********/
@@ -188,15 +188,12 @@ void loop() {
  {
   timer2=millis()-timer1;
   flag3=1;
- //tagertRotate=((testtime-998)/1464.8)/(0.09004*3.14159265359*1.01);//this equation will convert the time to the amount of rotation the car will go
-                  //0.09 is the dimameter of the wheel
-                  //3.14159265359*1.02 basically pi
-                  //18874 is a made up coefficient 
   tagertRotate=((timer2+4130.841176)/1447.25941);//this is the formula used to determine the number of rotations
-  RunTime=1000*tagertRotate*0.09004*3.14159265359*1.01/car_speed;
- //unit of rotation
+  RunTime=1000*tagertRotate*0.09004*3.14159265359*1.01/car_speed;//calculate the time the car needs to run
  }
 
+
+ //Detect if the car has moved by sensing the voltage on the fuel cell
  if(analogRead(A3) < 500 && car_moved==false)
  {
          Serial.println("It has not run");
@@ -210,6 +207,7 @@ void loop() {
 
  }
 
+ //controlling the car throught the motor shield
   if (flag3==1 && (millis()-car_start_time)>=RunTime && car_moved)
   {
     md.setM1Speed(0);
