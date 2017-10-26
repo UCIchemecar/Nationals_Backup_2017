@@ -6,7 +6,6 @@
 Adafruit_TSL2591 tsl = Adafruit_TSL2591(2591);
 DualMC33926MotorShield md;
 
-#define Motor_Tick_per_rotation 3591.84
 #define motor1_speed 319//adjust for speed of motor 1, out of 400
 #define motor2_speed 307//adjust for speed of motor 2, out of 400
 #define car_speed 0.39//speed of the car in m/s
@@ -21,7 +20,7 @@ void displaySensorDetails(void)
   Serial.print  ("Unique ID:    "); Serial.println(sensor.sensor_id);
   Serial.print  ("Max Value:    "); Serial.print(sensor.max_value); Serial.println(" lux");
   Serial.print  ("Min Value:    "); Serial.print(sensor.min_value); Serial.println(" lux");
-  Serial.print  ("Resolution:   "); Serial.print(sensor.resolution); Serial.println(" lux");  
+  Serial.print  ("Resolution:   "); Serial.print(sensor.resolution); Serial.println(" lux");
   Serial.println("------------------------------------");
   Serial.println("");
   delay(500);
@@ -43,7 +42,7 @@ void configureSensor(void)
   //tsl.setTiming(TSL2591_INTEGRATIONTIME_500MS);
   //tsl.setTiming(TSL2591_INTEGRATIONTIME_600MS);  // longest integration time (dim light)
 
-  /* Display the gain and integration time for reference sake */  
+  /* Display the gain and integration time for reference sake */
   //Serial.println("------------------------------------");
   //Serial.print  ("Gain:         ");
   tsl2591Gain_t gain = tsl.getGain();
@@ -63,12 +62,12 @@ void configureSensor(void)
       break;
   }
   //Serial.print  ("Timing:       ");
-  //Serial.print((tsl.getTiming() + 1) * 100, DEC); 
+  //Serial.print((tsl.getTiming() + 1) * 100, DEC);
   //Serial.println(" ms");
   //Serial.println("------------------------------------");
   //Serial.println("");
 
-  
+
 }
 
 void advancedRead(void)
@@ -80,25 +79,25 @@ void advancedRead(void)
   static unsigned long t0=0; //the time that liquid was stabilized
   static unsigned long t1=0; //the time that the liquid went dark
   static unsigned long time1=0; //time it takes for the liquid to go from injected to dark
-  static int f1=0; // flag to indicate phase, phase 0 is the default where nothing has happened. 
+  static int f1=0; // flag to indicate phase, phase 0 is the default where nothing has happened.
   ir = lum >> 16;
   full = lum & 0xFFFF;
   unsigned int a=tsl.calculateLux(full, ir);
-  Serial.print(millis()); Serial.print("          "); Serial.print(a); Serial.print("             "); Serial.print(t0);  Serial.print("                                 "); Serial.print(t1); Serial.print("                              "); Serial.println(time1); 
+  Serial.print(millis()); Serial.print("          "); Serial.print(a); Serial.print("             "); Serial.print(t0);  Serial.print("                                 "); Serial.print(t1); Serial.print("                              "); Serial.println(time1);
   if(a<40000 && millis()>=200 && f1==0)
   {
-    f1=1;//liquid has been injected. 
+    f1=1;//liquid has been injected.
   }
   if(f1==1 && a>40000)
   {
-    f1=2;//liquid has been stabilized 
+    f1=2;//liquid has been stabilized
     t0=millis();
   }
   if(f1==2 && a<40000)
   {
     //liquid has turned dark
     t1=millis();
-    time1=t1-t0;  
+    time1=t1-t0;
     if (time1>10000)
     {
       f1=3;
@@ -107,22 +106,22 @@ void advancedRead(void)
 }
 void setup() {
 Serial.begin(115200);
-  
+
   Serial.println("Starting Adafruit TSL2591 Test!");
-  
-  if (tsl.begin()) 
+
+  if (tsl.begin())
   {
     //Serial.println("Found a TSL2591 sensor");
-  } 
-  else 
+  }
+  else
   {
     //Serial.println("No sensor found ... check your wiring?");
     while (1);
   }
-    
+
   /* Display some basic information on this sensor */
   displaySensorDetails();
-  
+
   /* Configure the sensor */
   configureSensor();
 }
@@ -161,7 +160,7 @@ void loop() {
   lux=tsl.calculateLux(full, ir);
   Serial.print("Lux: "); Serial.println(tsl.calculateLux(full, ir));
   Serial.print("m: "); Serial.print(tagertRotate*3.14159265359*.09004); Serial.print(" / "); Serial.print(tagertRotate*3.14159265359*.09004*1.01);  Serial.print("    ");Serial.println(RunTime);
-  
+
   Serial.print("preLux: "); Serial.println(preLux);
   Serial.print("timer1: "); Serial.println(timer1);
   Serial.print("timer2: "); Serial.println(timer2);
@@ -169,24 +168,24 @@ void loop() {
     Serial.print("co: "); Serial.println(co);
     Serial.print("millis: "); Serial.println(millis());
   //Serial.print("total1: "); Serial.println(total1);
-  
+
      /*******Clockreset********/
   if (preLux>(lux+5)) //this is used to determine max lux
   {
     co = co+1;
   }
-  else 
+  else
   {
     co=0;
     }
   if ( preLux>lux && co>30 && (preLux-lux)>20 && flag1==0)
   {
-    flag1=1;  
+    flag1=1;
   }
   if ( preLux<lux && flag1 == 0)
   {
-    preLux=lux; 
-    timer1=millis(); 
+    preLux=lux;
+    timer1=millis();
   }
 
   if(flag1==1 && lux<30 &&flag3==0 && millis()>5000)//change the lux parameter
@@ -198,9 +197,9 @@ void loop() {
                   //3.14159265359*1.02 basically pi
                   //18874 is a made up coefficient 
   tagertRotate=((timer2+4130.841176)/1447.25941)/(0.09004*3.14159265359*1.01);//this is the formula used to determine the number of rotations
-  RunTime=1000*tagertRotate*0.09004*3.14159265359*1.01/0.16;
- //unit of rotation                  
- } 
+  RunTime=1000*tagertRotate*0.09004*3.14159265359*1.01/car_speed;
+ //unit of rotation
+ }
 
  if(analogRead(A3) < 500 && car_moved==false)
  {
@@ -225,5 +224,5 @@ void loop() {
     md.setM1Speed(motor1_speed);
     md.setM2Speed(motor2_speed);
   }
-  
+
 }
