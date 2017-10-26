@@ -23,7 +23,6 @@ void displaySensorDetails(void)
   Serial.print  ("Resolution:   "); Serial.print(sensor.resolution); Serial.println(" lux");
   Serial.println("------------------------------------");
   Serial.println("");
-  delay(500);
 }
 
 void configureSensor(void)
@@ -115,7 +114,7 @@ Serial.begin(115200);
   }
   else
   {
-    //Serial.println("No sensor found ... check your wiring?");
+    Serial.println("No sensor found ... check your wiring?");
     while (1);
   }
 
