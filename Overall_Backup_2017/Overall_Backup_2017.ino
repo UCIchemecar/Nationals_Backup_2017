@@ -1,5 +1,3 @@
-
-
 #include <Adafruit_Sensor.h>
 #include "Adafruit_TSL2591.h"
 #include <Wire.h>
@@ -127,7 +125,6 @@ Serial.begin(115200);
   
   /* Configure the sensor */
   configureSensor();
-  pinMode(8,OUTPUT);
 }
 
 
@@ -217,8 +214,6 @@ void loop() {
  {
          car_moved=!car_moved;
          car_start_time=millis();
-         md.setM1Speed(motor1_speed);
-         md.setM2Speed(motor2_speed);
          Serial.println("It started running");
 
  }
